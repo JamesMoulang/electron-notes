@@ -143,3 +143,5 @@ yarn electron-packager . --platform=win32
 # Adding native functionality to the app
 
 In our case, this is steam SDK.
+
+I used steamworks.js - this only worked with version 1.52 of the Steamworks SDK.
