@@ -81,3 +81,29 @@ A basic Electron application needs just these files:
 - `main.js` - Starts the app and creates a browser window to render HTML. This is the app's **main process**.
 - `index.html` - A web page to render. This is the app's **renderer process**.
 - `preload.js` - A content script that runs before the renderer process loads.
+
+So now let's take what we built with vite and transfer it into the app.
+🔧 This is something I'd like to automate in the future.
+
+What does this mean? Copy in assets, images, audio, and index.html to the electron app.
+It didn't work. Why? Because in index.html, we're accessing js from:
+
+```
+/index-48f348fc.js
+```
+
+If I change to
+
+```
+index-48f348fc.js
+```
+
+it does work, but I'd rather not. The question is: what does '/' refer to in an electron app?
+Based on some [googling](https://stackoverflow.com/questions/38889682/electron-looking-for-resources-in-root-folder) electron is using the root of the filesystem here. We can fix this by adding:
+
+```html
+<base href="./">
+```
+
+to the head of index.html within our vite project. So let's rebuild, re-copy, and try again.
+
