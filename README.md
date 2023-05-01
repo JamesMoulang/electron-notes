@@ -144,4 +144,32 @@ yarn electron-packager . --platform=win32
 
 In our case, this is steam SDK.
 
-I used steamworks.js - this only worked with version 1.52 of the Steamworks SDK.
+I used [steamworks.js](https://github.com/ceifa/steamworks.js) - this only worked with [version 1.52](https://github.com/ceifa/steamworks.js/issues/93) of the Steamworks SDK.
+
+Basic functionality in main.js of the electron app:
+
+```javascript
+const steamworks = require('steamworks.js');
+steamworks_client = steamworks.init(480);
+console.log(steamworks_client.localplayer.getName());
+```
+
+# Communicating between the renderer process and native functionality
+
+This uses `electron.ipcMain`. Within `main.js` create a listener event:
+
+```javascript
+ipcMain.on('get_steam_name', (event) => {
+  event.returnValue = steamworks_client.localplayer.getName();
+});
+```
+
+Within `index.html` create a window function that calls it:
+
+```javascript
+const {ipcRenderer} = require('electron');
+    
+window.getSteamClient = () => {
+    return ipcRenderer.sendSync('get_steamworks');
+};
+```
