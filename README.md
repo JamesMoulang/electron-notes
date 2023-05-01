@@ -11,7 +11,7 @@ What do we need to do to create and distribute an electron app?
 Use [vite](https://vitejs.dev/guide/) to run a dev server.
 
 ```
-pnpm create vite
+yarn create vite
 ```
 
 The basic structure of the project looks like this:
@@ -27,16 +27,16 @@ The basic structure of the project looks like this:
 └── src (contains project javascript files)
 ```
 
-Run using:
+Then cd into the project and run `yarn` to initialise. Run the project using:
 
 ```
-pnpm run dev
+yarn dev
 ```
 
 # Bundling the thing into static assets
 
 ```
-pnpm vite build
+yarn run build
 ```
 
 This creates a folder called dist which has a structure that looks like this:
@@ -60,7 +60,7 @@ What we have at this point is a folder of static assets ready to be served by an
 If you try to run this in a browser, it will kind of work, but complains about CORS. You can run a preview with:
 
 ```
-pnpm exec vite preview
+yarn run vite preview
 ```
 
 # Creating an electron app to serve static assets
@@ -73,9 +73,9 @@ git clone https://github.com/electron/electron-quick-start
 # Go into the repository
 cd electron-quick-start
 # Install dependencies
-pnpm i
+yarn
 # Run the app
-pnpm run start
+yarn run start
 ```
 
 A basic Electron application needs just these files:
@@ -87,10 +87,10 @@ A basic Electron application needs just these files:
 
 Copy in assets, images, audio, and index.html to the electron app. (🔧 This is something I'd like to automate in the future).
 
-In order to get this work, we have to run
+In order to get this work, in our vite project we have to run
 
 ```
-pnpm vite build --base=./
+yarn vite build --base=./
 ```
 
 to rewrite asset paths. Why? Because '/' in electron refers to the root directory of the file system, not the app's folder.
@@ -98,7 +98,7 @@ to rewrite asset paths. Why? Because '/' in electron refers to the root director
 Let's edit the "build" command in package.json so we can just run:
 
 ```
-pnpm exec build
+yarn run build
 ```
 
 # Packaging the electron app
@@ -112,8 +112,19 @@ We have a few options here. What's the best?
 Let's try electron-packager
 
 ```
-pnpm add -D electron-packager
-pnpm exec electron-packager x
+yarn add -D electron-packager
+yarn run electron-packager x
 ```
 
-Seems like pnpm doesn't play well with this.
+NOTE: seems like pnpm doesn't like electron-packager, and I wasn't able to get it to work. So I switched to yarn which seems to work fine.
+
+## Packaging for other platforms
+
+This worked for macOS but I need to figure out how to build for windows. From electron-packager readme:
+
+> Building an Electron app for the Windows target platform requires editing the Electron.exe file. Currently, Electron Packager uses node-rcedit to accomplish this. A Windows executable is bundled in that Node package and needs to be run in order for this functionality to work, so on non-Windows host platforms (not including WSL), Wine 1.6 or later needs to be installed. On macOS, it is installable via Homebrew.
+
+```
+brew update
+
+```
