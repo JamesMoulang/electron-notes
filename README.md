@@ -99,11 +99,19 @@ index-48f348fc.js
 ```
 
 it does work, but I'd rather not. The question is: what does '/' refer to in an electron app?
-Based on some [googling](https://stackoverflow.com/questions/38889682/electron-looking-for-resources-in-root-folder) electron is using the root of the filesystem here. We can fix this by adding:
+Based on some [googling](https://stackoverflow.com/questions/38889682/electron-looking-for-resources-in-root-folder) electron is using the root of the filesystem here. This is kind of an issue. You can see the electron-quick-start index.html loads from './'
 
 ```html
-<base href="./">
+<script src="./renderer.js"></script>
 ```
 
-to the head of index.html within our vite project. So let's rebuild, re-copy, and try again.
+When vite builds, it always tries to reference '/assets/index.js'. Either we need to change what vite does, or we need to change what electron considers the root directory.
 
+So if we run
+```
+pnpm vite build --base=./
+```
+
+then vite will instead refer to ./index-48f348fc.js
+
+And it works! Assets and all. Nice one vite.
