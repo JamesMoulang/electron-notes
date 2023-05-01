@@ -121,7 +121,12 @@ NOTE: seems like pnpm doesn't like electron-packager, and I wasn't able to get i
 
 ## Packaging for other platforms
 
-This worked for macOS but I need to figure out how to build for windows. From electron-packager readme:
+Platform values for the official prebuilt Electron binaries:
+
+- `darwin` (macOS)
+- `linux`
+- `mas` (macOS, specifically for submitting to the Mac App Store)
+- `win32`
 
 > Building an Electron app for the Windows target platform requires editing the Electron.exe file. Currently, Electron Packager uses node-rcedit to accomplish this. A Windows executable is bundled in that Node package and needs to be run in order for this functionality to work, so on non-Windows host platforms (not including WSL), Wine 1.6 or later needs to be installed. On macOS, it is installable via Homebrew.
 
@@ -129,3 +134,10 @@ This worked for macOS but I need to figure out how to build for windows. From el
 brew update
 
 ```
+
+To build a windows version:
+
+```
+yarn electron-packager . --platform=win32
+```
+
