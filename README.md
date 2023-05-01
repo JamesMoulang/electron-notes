@@ -3,9 +3,10 @@ What do we need to do to create and distribute an electron app?
 1. Actually write the thing
 2. Bundle the thing into static assets
 3. Create a simple electron application that serves those static assets
-4. Package the electron application
+4. Package the electron application (for multiple platforms)
 5. Add native functionality to the electron app (if needed)
 6. Allow the electron app's renderer process to talk to this native functionality
+7. Notarise the app for macOS
 
 # Actually writing the thing
 Use [vite](https://vitejs.dev/guide/) to run a dev server.
