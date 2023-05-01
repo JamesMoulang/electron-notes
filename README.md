@@ -84,38 +84,18 @@ A basic Electron application needs just these files:
 - `index.html` - A web page to render. This is the app's **renderer process**.
 - `preload.js` - A content script that runs before the renderer process loads.
 
-So now let's take what we built with vite and transfer it into the app (🔧 This is something I'd like to automate in the future).
+Copy in assets, images, audio, and index.html to the electron app. (🔧 This is something I'd like to automate in the future).
 
-What does this mean? Copy in assets, images, audio, and index.html to the electron app.
-It didn't work. Why? Because in index.html, we're accessing js from:
+In order to get this work, we have to run
 
-```
-/index-48f348fc.js
-```
-
-If I change to
-
-```
-index-48f348fc.js
-```
-
-it does work, but I'd rather not. The question is: what does '/' refer to in an electron app?
-Based on some [googling](https://stackoverflow.com/questions/38889682/electron-looking-for-resources-in-root-folder) electron is using the root of the filesystem here. This is kind of an issue. You can see the electron-quick-start index.html loads from './'
-
-```html
-<script src="./renderer.js"></script>
-```
-
-When vite builds, it always tries to reference '/assets/index.js'. Either we need to change what vite does, or we need to change what electron considers the root directory.
-
-So if we run
 ```
 pnpm vite build --base=./
 ```
 
-then vite will instead refer to ./index-48f348fc.js and it works! Assets and all. Nice one vite. Let's edit the "build" command in package.json so we don't have to type that every time, though.
+to rewrite asset paths. Why? Because '/' in electron refers to the root directory of the file system, not the app's folder.
 
-So our build command is now:
+Let's edit the "build" command in package.json so we can just run:
+
 ```
-pnpm build
+pnpm exec build
 ```
