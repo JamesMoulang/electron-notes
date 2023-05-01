@@ -100,3 +100,20 @@ Let's edit the "build" command in package.json so we can just run:
 ```
 pnpm exec build
 ```
+
+# Packaging the electron app
+
+We have a few options here. What's the best?
+
+- electron-forge
+- electron-builder
+- electron-packager (which forge and builder both use)
+
+Let's try electron-packager
+
+```
+pnpm add -D electron-packager
+pnpm exec electron-packager x
+```
+
+Seems like pnpm doesn't play well with this.
