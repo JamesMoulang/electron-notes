@@ -82,8 +82,7 @@ A basic Electron application needs just these files:
 - `index.html` - A web page to render. This is the app's **renderer process**.
 - `preload.js` - A content script that runs before the renderer process loads.
 
-So now let's take what we built with vite and transfer it into the app.
-🔧 This is something I'd like to automate in the future.
+So now let's take what we built with vite and transfer it into the app (🔧 This is something I'd like to automate in the future).
 
 What does this mean? Copy in assets, images, audio, and index.html to the electron app.
 It didn't work. Why? Because in index.html, we're accessing js from:
