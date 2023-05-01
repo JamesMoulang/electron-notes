@@ -7,8 +7,7 @@ What do we need to do to create and distribute an electron app?
 5. Package the electron application
 
 # Actually writing the thing
-To do this, I'm using [vite](https://vitejs.dev/) to run a dev server.
-[Guide](https://vitejs.dev/guide/) to setting up a new vite project.
+Use [vite](https://vitejs.dev/guide/) to run a dev server.
 
 ```
 pnpm create vite
@@ -27,13 +26,11 @@ The basic structure of the project looks like this:
 └── src (contains project javascript files)
 ```
 
-Run the project using:
+Run using:
 
 ```
 pnpm run dev
 ```
-
-Vite doesn't have to use webpack to bundle all the files together - it uses ES modules. Luckily it's trivial to switch.
 
 # Bundling the thing into static assets
 
@@ -50,9 +47,14 @@ This creates a folder called dist which has a structure that looks like this:
 └── audio
 ```
 
-In order for images/audio to be included in dist they must be imported from somewhere within the js. Maybe there's another way to do this, but I haven't figured it out yet. For me this is fine as all assets are loaded in js. And dist will only include the assets I actually load. I don't need to keep two asset folders up to date.
+In order for images/audio to be included in dist they must be imported from somewhere within the js. For example:
+```javascript
+import img_tick from '/images/tick.png';
+const img = new Image();
+img.src = img_tick;
+```
 
-Anyway - what we have at this point is a folder of static assets ready to be served by an electron app.
+What we have at this point is a folder of static assets ready to be served by an electron app.
 
 If you try to run this in a browser, it will kind of work, but complains about CORS. You can run a preview with:
 
