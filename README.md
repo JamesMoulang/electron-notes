@@ -111,6 +111,9 @@ So if we run
 pnpm vite build --base=./
 ```
 
-then vite will instead refer to ./index-48f348fc.js
+then vite will instead refer to ./index-48f348fc.js and it works! Assets and all. Nice one vite. Let's edit the "build" command in package.json so we don't have to type that every time, though.
 
-And it works! Assets and all. Nice one vite.
+So our build command is now:
+```
+pnpm build
+```
