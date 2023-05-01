@@ -173,3 +173,57 @@ window.getSteamClient = () => {
     return ipcRenderer.sendSync('get_steamworks');
 };
 ```
+
+# Notarising for macOS
+
+For this I'll try [electron-notarize](https://github.com/electron/notarize)
+
+```javascript
+const { notarize } = require('@electron/notarize');
+const yargs = require('yargs');
+const { appBundleId } = require('./package.json');
+
+const argv = yargs
+  .option('id', {
+    describe: 'Apple ID',
+    type: 'string',
+    demandOption: true,
+  })
+  .option('password', {
+    describe: 'Apple ID password',
+    type: 'string',
+    demandOption: true,
+  })
+  .argv;
+
+console.log(appBundleId, argv.id, argv.password);
+
+async function packageTask () {
+  // Package your app here, and code sign with hardened runtime
+  await notarize({
+    appBundleId,
+    appPath: './electron-quick-start-darwin-x64',
+    appleId: argv.id,
+    appleIdPassword: argv.password,
+    identity: 'Developer ID Application: your_name (your_cert_id)', // copied from keychain
+    entitlements: './electron-quick-start-darwin-x64/Content/electron-quick-start/Contents/Resources/entitlements.plist',
+  });
+}
+
+packageTask();
+```
+
+an entitlements file has to be made in ```app/Contents/Resources/entitlements.plist```
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>com.apple.security.cs.allow-jit</key>
+    <true/>
+    <key>com.apple.security.cs.allow-unsigned-executable-memory</key>
+    <true/>
+  </dict>
+</plist>
+```
