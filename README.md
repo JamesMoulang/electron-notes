@@ -140,3 +140,6 @@ To build a windows version:
 yarn electron-packager . --platform=win32
 ```
 
+# Adding native functionality to the app
+
+In our case, this is steam SDK.
