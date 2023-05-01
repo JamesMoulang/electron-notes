@@ -132,7 +132,6 @@ Platform values for the official prebuilt Electron binaries:
 
 ```
 brew update
-
 ```
 
 To build a windows version:
