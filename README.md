@@ -146,7 +146,7 @@ In our case, this is steam SDK.
 
 I used [steamworks.js](https://github.com/ceifa/steamworks.js) - this only worked with [version 1.52](https://github.com/ceifa/steamworks.js/issues/93) of the Steamworks SDK.
 
-Basic functionality in main.js of the electron app:
+Basic functionality in `main.js` of the electron app:
 
 ```javascript
 const steamworks = require('steamworks.js');
