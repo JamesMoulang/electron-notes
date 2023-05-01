@@ -176,54 +176,53 @@ window.getSteamClient = () => {
 
 # Notarising for macOS
 
-For this I'll try [electron-notarize](https://github.com/electron/notarize)
+I tried [electron-notarize](https://github.com/electron/notarize), and had a lot of problems. Knowing electron-builder has some in-built support for electron-notarize I tried switching over to that, which did work.
+
+This [stack overflow](https://stackoverflow.com/questions/64168569/electron-notarize-problem-not-signing-all-binaries) article was helpful.
+
+I had to add this to `package.json`
+
+```
+"build": {
+"mac": {
+    "category": "public.app-category.developer-tools",
+    "hardenedRuntime": true,
+    "gatekeeperAssess": false,
+    "entitlements": "build_assets/mac/entitlements.plist",
+    "entitlementsInherit": "build_assets/mac/entitlements.plist"
+},
+    "afterSign": "./scripts/notarize.js"
+},
+"scripts": {
+    "start": "electron .",
+    "app:dir": "electron-builder --dir",
+    "app:dist": "electron-builder"
+},
+```
+
+and create a `notarize.js` file that gets called automatically by `electron-builder`
 
 ```javascript
-const { notarize } = require('@electron/notarize');
-const yargs = require('yargs');
-const { appBundleId } = require('./package.json');
+const { notarize } = require('electron-notarize');
+const { appBundleId } = require('../package.json');
 
-const argv = yargs
-  .option('id', {
-    describe: 'Apple ID',
-    type: 'string',
-    demandOption: true,
-  })
-  .option('password', {
-    describe: 'Apple ID password',
-    type: 'string',
-    demandOption: true,
-  })
-  .argv;
+exports.default = async function notarizing(context) {
+  const { electronPlatformName, appOutDir } = context;  
+  if (electronPlatformName !== 'darwin') {
+    return;
+  }
 
-console.log(appBundleId, argv.id, argv.password);
+  const appName = context.packager.appInfo.productFilename;
 
-async function packageTask () {
-  // Package your app here, and code sign with hardened runtime
-  await notarize({
+  return await notarize({
     appBundleId,
-    appPath: './electron-quick-start-darwin-x64',
-    appleId: argv.id,
-    appleIdPassword: argv.password,
-    identity: 'Developer ID Application: your_name (your_cert_id)', // copied from keychain
-    entitlements: './electron-quick-start-darwin-x64/Content/electron-quick-start/Contents/Resources/entitlements.plist',
+    appPath: `${appOutDir}/${appName}.app`,
+    appleId: 'my@email.com',
+    appleIdPassword: 'one_time_password',
   });
-}
-
-packageTask();
+};
 ```
 
-an entitlements file has to be made in ```app/Contents/Resources/entitlements.plist```
+I also had to renew my apple developer certificate, and made a new identifier for the app, because the last time i tried this, it apparently didn't work.
 
-```
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-  <dict>
-    <key>com.apple.security.cs.allow-jit</key>
-    <true/>
-    <key>com.apple.security.cs.allow-unsigned-executable-memory</key>
-    <true/>
-  </dict>
-</plist>
-```
+Still to figure out: how to build for other platforms with electron-builder
